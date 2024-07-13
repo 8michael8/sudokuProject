@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 
 function App() {
@@ -41,41 +41,46 @@ function App() {
   };
 
   return (
-    <div>
+    <div className="App">
       <h1>Sudoku Solver</h1>
-      <div className="board">
-        {board.map((row, rowIndex) => (
-          <div key={rowIndex} className="row">
-            {row.map((cell, colIndex) => (
-              <input
-                key={colIndex}
-                type="number"
-                value={cell || ''}
-                onChange={(e) => handleChange(rowIndex, colIndex, e.target.value)}
-                className="cell"
-              />
-            ))}
-          </div>
-        ))}
-      </div>
-      <button onClick={handleSubmit}>Solve</button>
-      {loading && <p>Loading...</p>}
-      {solvedBoard && (
+      <div className="boards-container">
         <div>
-          <h2>Solved Board</h2>
+          <h2>Unsolved Board</h2>
           <div className="board">
-            {solvedBoard.map((row, rowIndex) => (
+            {board.map((row, rowIndex) => (
               <div key={rowIndex} className="row">
                 {row.map((cell, colIndex) => (
-                  <div key={colIndex} className="cell solved-cell">
-                    {cell}
-                  </div>
+                  <input
+                    key={colIndex}
+                    type="number"
+                    value={cell || ''}
+                    onChange={(e) => handleChange(rowIndex, colIndex, e.target.value)}
+                    className="cell"
+                  />
                 ))}
               </div>
             ))}
           </div>
         </div>
-      )}
+        {solvedBoard && (
+          <div>
+            <h2>Solved Board</h2>
+            <div className="board">
+              {solvedBoard.map((row, rowIndex) => (
+                <div key={rowIndex} className="row">
+                  {row.map((cell, colIndex) => (
+                    <div key={colIndex} className="cell solved-cell">
+                      {cell}
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+      <button onClick={handleSubmit}>Solve</button>
+      {loading && <p>Loading...</p>}
     </div>
   );
 }
