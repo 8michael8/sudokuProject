@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import buttonImage from './images/button.png';
+import background from './images/black.jpg';
 
 /* To start react: npm start*/
 
@@ -70,6 +71,7 @@ const currentBoardRef = useRef([]);
     });
 
     const [steps, setSteps] = useState([]);
+    const [errors, setErrors] = useState([]);
     const [currentStep, setCurrentStep] = useState(0);
     const [loading, setLoading] = useState(false);
 
@@ -82,10 +84,14 @@ const currentBoardRef = useRef([]);
     const getNewBoard = () => {
         const newBoard = getRandomBoard();
         setBoard(newBoard);
+        setErrors([])
+        setSteps([])
     };
 
     const reset = () => {
         setBoard(currentBoardRef.current.map(row => [...row]));
+        setSteps([]);
+        setErrors([]);
     };
 
     const handleSubmit = async () => {
@@ -95,17 +101,24 @@ const currentBoardRef = useRef([]);
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ board })
+            body: JSON.stringify({ currentBoard: currentBoardRef.current, board })
         });
         const data = await response.json();
-        setLoading(false);
         if (data.steps) {
             setSteps(data.steps);
             setCurrentStep(0);
-        } else {
+
+        }
+        if(data.errorList){
+            setErrors(data.errorList)
+        }
+        else {
             alert('Board cannot be solved');
         }
+
     };
+
+
 
     useEffect(() => {
         if (steps.length > 0) {
@@ -115,6 +128,7 @@ const currentBoardRef = useRef([]);
                         return prevStep + 1;
                     } else {
                         clearInterval(interval);
+                        setLoading(false);
                         return prevStep;
                     }
                 });
@@ -124,59 +138,73 @@ const currentBoardRef = useRef([]);
     }, [steps]);
 
     return (
-        <div className="App">
-            <div className="boards-container">
-                <div>
-                    <div className="board1">
-                        <h2>Sudoku Board</h2>
-                        {board.map((row, rowIndex) => (
-                            <div key={rowIndex} className="row">
-                                {row.map((cell, colIndex) => (
+    <div className="App">
+        <div className = "layout">
+        <h1 className = "text">SUDOKU</h1>
+            <div className="black-square">
+                <button onClick={getNewBoard} className="my-button b3">
+                    New Board
+                </button>
+
+                <button onClick={reset} className="my-button b2">
+                    Reset
+                </button>
+
+                <button onClick={handleSubmit} className="my-button b1">
+                    Solve
+                </button>
+            </div>
+        </div>
+        <div className="boards-container">
+            <div>
+                <div className="board1">
+                <br />
+                    {board.map((row, rowIndex) => (
+                        <div key={rowIndex} className="row">
+                            {row.map((cell, colIndex) => {
+                                const isError = errors.some(([errorRow, errorCol]) => errorRow === rowIndex && errorCol === colIndex);
+                                return (
                                     <input
                                         key={colIndex}
                                         type="number"
                                         value={cell || ''}
                                         onChange={(e) => handleChange(rowIndex, colIndex, e.target.value)}
-                                        className={`cell ${currentBoardRef.current[rowIndex][colIndex] == 0 ? 'edited' : ''}`}
+                                        className={`cell ${currentBoardRef.current[rowIndex][colIndex] == 0 ? 'edited' : ''} ${isError ? 'error-cell' : ''}`}
                                         readOnly={currentBoardRef.current[rowIndex][colIndex] !== 0}
                                     />
-                                ))}
+                                );
+                            })}
+                        </div>
+                    ))}
+                </div>
+            </div>
+            {steps.length > 0 && (
+                <div>
+                    <div className="board2">
+                        <br/>
+                        {steps[currentStep].map((row, rowIndex) => (
+                            <div key={rowIndex} className="row">
+                                {row.map((cell, colIndex) => {
+                                    const isStep = errors.some(([stepRow, stepCol]) => stepRow === rowIndex && stepCol === colIndex);
+                                    return (
+                                        <div key={colIndex}
+                                             className={`cell solved-cell ${isStep ? 'solved-cell-correct' : ''}`}>
+                                            {cell}
+                                        </div>
+                                    );
+                                })}
                             </div>
                         ))}
                     </div>
+                    <h1 className={`load ${loading ? 'load2' : ''}`}>LOADING...</h1>
                 </div>
-                {steps.length > 0 && (
-                    <div>
-                        <div className="board2">
-                            <h2>Solved Board (Step by Step)</h2>
-                            {steps[currentStep].map((row, rowIndex) => (
-                                <div key={rowIndex} className="row">
-                                    {row.map((cell, colIndex) => (
-                                        <div key={colIndex} className="cell solved-cell">
-                                            {cell}
-                                        </div>
-                                    ))}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
-            </div>
-            <button onClick={handleSubmit} className="my-button">
-                Solve
-            </button>
-
-            <button onClick={reset} className="my-button">
-                Reset
-            </button>
-
-            <button onClick={getNewBoard} className="my-button">
-                New Board
-            </button>
-
-            {loading && <p>Loading...</p>}
+            )}
         </div>
+
+
+    </div>
     );
+
 }
 
 export default App;

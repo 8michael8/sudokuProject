@@ -51,21 +51,22 @@ def solveSudoku(board, steps):
 @app.route("/solve", methods=["POST"])
 def solve():
     data = request.get_json()
-    board = data.get("board", [])
-    steps = []
+    board = data.get("currentBoard", [])
+    boardError = data.get("board", [])
 
-    for i in range(len(board)):
-        for j in range(len(board[0])):
-            if board[i][j] != 0:
-                if checkValidNum(board,(i, j), board[i][j]) == False:
-                    return jsonify({"error": "Board cannot be solved"}), 400
+    steps = []
+    errorList = []
+
     if not board:
         return jsonify({"error": "Invalid board"}), 400
 
     if solveSudoku(board, steps):
-        return jsonify({"steps": steps})
-    else:
-        return jsonify({"error": "Board cannot be solved"}), 400
+        for i in range(len(boardError)):
+            for j in range(len(boardError[0])):
+                if (boardError[i][j] != board[i][j] or boardError[i][j] == 0):
+                    errorList.append((i, j))
+        return jsonify({"steps": steps, "errorList": errorList})
+
 
 if __name__ == "__main__":
     app.run(debug=True)
