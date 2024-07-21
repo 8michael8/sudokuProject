@@ -43,6 +43,7 @@ function App() {
     ];
 
 const currentBoardRef = useRef([]);
+const timerRef = useRef(null);
 
     // Function to compare two boards
     const areBoardsEqual = (board1, board2) => {
@@ -74,6 +75,8 @@ const currentBoardRef = useRef([]);
     const [errors, setErrors] = useState([]);
     const [currentStep, setCurrentStep] = useState(0);
     const [loading, setLoading] = useState(false);
+    const [secondsElapsed, setSecondsElapsed] = useState(0);
+
 
     const handleChange = (row, col, value) => {
         const newBoard = board.map((r, rIdx) => rIdx === row ? r.map((c, cIdx) => cIdx === col ? parseInt(value) || 0 : c) : r);
@@ -86,16 +89,21 @@ const currentBoardRef = useRef([]);
         setBoard(newBoard);
         setErrors([])
         setSteps([])
+        setSecondsElapsed(0);
+        startTimer();
     };
 
     const reset = () => {
         setBoard(currentBoardRef.current.map(row => [...row]));
         setSteps([]);
         setErrors([]);
+        setSecondsElapsed(0);
+        startTimer();
     };
 
     const handleSubmit = async () => {
         setLoading(true);
+        pauseTimer();
         const response = await fetch('/solve', {
             method: 'POST',
             headers: {
@@ -118,6 +126,17 @@ const currentBoardRef = useRef([]);
 
     };
 
+        const startTimer = () => {
+        if (timerRef.current) clearInterval(timerRef.current);
+        timerRef.current = setInterval(() => {
+            setSecondsElapsed(prevSeconds => prevSeconds + 1);
+        }, 1000);
+    };
+
+    const pauseTimer = () => {
+        if (timerRef.current) clearInterval(timerRef.current);
+    };
+
 
 
     useEffect(() => {
@@ -137,72 +156,90 @@ const currentBoardRef = useRef([]);
         }
     }, [steps]);
 
+    useEffect(() => {
+        startTimer();
+        return () => pauseTimer();
+    }, []);
+
+    const formatTime = (seconds) => {
+        const mins = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+        return `${mins.toString()}:${secs.toString().padStart(2, '0')}`;
+    };
+
     return (
-    <div className="App">
-        <div className = "layout">
-        <h1 className = "text">SUDOKU</h1>
-            <div className="black-square">
-                <button onClick={getNewBoard} className="my-button b3">
-                    New Board
-                </button>
+        <div className="App">
+            <div className="layout">
+                <h1 className="text">SUDOKU</h1>
+                <div className="black-square">
+                    <div className="timer">
+                        {formatTime(secondsElapsed)}
+                    </div>
+                    <button onClick={getNewBoard} className="my-button b3">
+                        New Board
+                    </button>
 
-                <button onClick={reset} className="my-button b2">
-                    Reset
-                </button>
+                    <button onClick={reset} className="my-button b2">
+                        Reset
+                    </button>
 
-                <button onClick={handleSubmit} className="my-button b1">
-                    Solve
-                </button>
-            </div>
-        </div>
-        <div className="boards-container">
-            <div>
-                <div className="board1">
-                <br />
-                    {board.map((row, rowIndex) => (
-                        <div key={rowIndex} className="row">
-                            {row.map((cell, colIndex) => {
-                                const isError = errors.some(([errorRow, errorCol]) => errorRow === rowIndex && errorCol === colIndex);
-                                return (
-                                    <input
-                                        key={colIndex}
-                                        type="number"
-                                        value={cell || ''}
-                                        onChange={(e) => handleChange(rowIndex, colIndex, e.target.value)}
-                                        className={`cell ${currentBoardRef.current[rowIndex][colIndex] == 0 ? 'edited' : ''} ${isError ? 'error-cell' : ''}`}
-                                        readOnly={currentBoardRef.current[rowIndex][colIndex] !== 0}
-                                    />
-                                );
-                            })}
-                        </div>
-                    ))}
+                    <button onClick={handleSubmit} className="my-button b1">
+                        Solve
+                    </button>
                 </div>
             </div>
-            {steps.length > 0 && (
+            <div className="boards-container">
                 <div>
-                    <div className="board2">
+                <div className="board1">
                         <br/>
-                        {steps[currentStep].map((row, rowIndex) => (
+                        {board.map((row, rowIndex) => (
                             <div key={rowIndex} className="row">
                                 {row.map((cell, colIndex) => {
-                                    const isStep = errors.some(([stepRow, stepCol]) => stepRow === rowIndex && stepCol === colIndex);
+                                    const isError = errors.some(([errorRow, errorCol]) => errorRow === rowIndex && errorCol === colIndex);
                                     return (
-                                        <div key={colIndex}
-                                             className={`cell solved-cell ${isStep ? 'solved-cell-correct' : ''}`}>
-                                            {cell}
-                                        </div>
+                                        <input
+                                            key={colIndex}
+                                            type="number"
+                                            value={cell || ''}
+                                            onChange={(e) => handleChange(rowIndex, colIndex, e.target.value)}
+                                            className={`cell ${currentBoardRef.current[rowIndex][colIndex] == 0 ? 'edited' : 'correct-cell'} ${isError ? 'error-cell' : ''}`}
+                                            readOnly={currentBoardRef.current[rowIndex][colIndex] !== 0}
+                                        />
                                     );
                                 })}
                             </div>
                         ))}
                     </div>
-                    <h1 className={`load ${loading ? 'load2' : ''}`}>LOADING...</h1>
                 </div>
-            )}
+                {steps.length > 0 && (
+                    <div>
+                        <div className="board2">
+                            <br/>
+                            {steps[currentStep].map((row, rowIndex) => (
+                                <div key={rowIndex} className="row">
+                                    {row.map((cell, colIndex) => {
+                                        return (
+                                            <div key={colIndex}
+                                                 className={`cell solved-cell ${currentBoardRef.current[rowIndex][colIndex] == 0 ? 'solved-cell-correct' : 'correct-cell'}`}>
+                                                {cell}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            ))}
+                        </div>
+                        <div className={`loader ${loading ? 'loader2' : ''}`}>
+                            <h1 className={`load ${loading ? 'load2' : ''}`}>LOADING</h1>
+                            <div className="dot"></div>
+                            <div className="dot"></div>
+                            <div className="dot"></div>
+                        </div>
+                    </div>
+                )}
+            </div>
+
+
         </div>
-
-
-    </div>
     );
 
 }

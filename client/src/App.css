@@ -27,20 +27,19 @@ body {
   justify-content: center;
   gap: 5vh;  /* Space between buttons */
 }
-.load {
+.load, .loader{
   opacity: 0%;
 
 }
-.load2 {
+.load2, .loader2{
   opacity: 100%;
   color: black;
   font-family: 'Roboto Condensed', sans-serif;
-  font-size: 4vw;
-  right: 10vw;
-  position: absolute;
+  font-size: 2.5vw;
 
 
 }
+
 
 .my-button:hover {
   box-shadow: 0 0 20px rgba(255, 238, 140, 0.7), 0 0 30px rgba(255, 238, 140, 0.7), 0 0 40px rgba(255, 238, 140, 0.7), 0 0 50px rgba(255, 238, 140, 0.7);
@@ -51,9 +50,9 @@ body {
   color: white;
   border: none;
   padding: 10px 20px;
-  font-size: 16px;
+  font-size: 2vw;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 3vw;
   transition: box-shadow 0.5s;
 }
 
@@ -75,6 +74,7 @@ body {
   align-items: center;
   justify-content: center;
   margin-right: 5vw;
+  margin-top: 10vh;
 }
 
 
@@ -91,7 +91,7 @@ body {
   margin: 0;
   font-size: 2vw;
   transition: background-color 0.5s;
-  background-color: #FFEE8C;
+  background-color: white;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -101,28 +101,28 @@ body {
   background-color: #ADDFFF;
 }
 .cell.edited {
-  color: blue;
+  color: black;
 }
 
 /* Add bold borders for every 3rd row and column */
 .cell:nth-child(3n+1) {
-  border-left: 0.5vh solid #fff;
+  border-left: 0.5vh solid gray;
 }
 
 .cell:nth-child(3n) {
-  border-right: 0.5vh solid #fff;
+  border-right: 0.5vh solid gray;
 }
 
 .row:nth-child(3n+1) .cell {
-  border-bottom: 0.5vh solid #fff;
+  border-bottom: 0.5vh solid gray;
 }
 .row:nth-child(3n+2) .cell {
-  border-top: 0.5vh solid #fff;
+  border-top: 0.5vh solid gray;
 }
 .solved-cell {
   width: 3vw;
   height: 6.2vh;
-  background-color: #FFEE8C;
+  background-color: white;
   color: black;
   border: 0.2vh solid #ddd;
 }
@@ -134,4 +134,51 @@ body {
 
 .error-cell {
     background-color: red;
+}
+
+.correct-cell {
+  background-color: black;
+  color: white;
+}
+
+.loader {
+  position: absolute;
+  right: 14.5vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+}
+
+.dot {
+  border-radius: 100%;
+  border: 0.2vw solid black;
+  margin-left: 0.8vw;
+  margin-top: 3vh;
+}
+
+.dot:nth-child(2) {
+  animation: preloader 0.6s ease-in-out alternate infinite;
+}
+
+.dot:nth-child(3) {
+  animation: preloader 0.6s ease-in-out alternate 0.2s infinite;
+}
+
+.dot:nth-child(4) {
+  animation: preloader 0.6s ease-in-out alternate 0.4s infinite;
+}
+
+@keyframes preloader {
+  100% {
+    transform: scale(2);
+  }
+}
+
+.timer {
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: 7vw;
+  margin-top: -65vh;
+  color: gray;
+  position: absolute;
 }
