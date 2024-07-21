@@ -41,23 +41,56 @@ body {
 }
 
 
-.my-button:hover {
-  box-shadow: 0 0 20px rgba(255, 238, 140, 0.7), 0 0 30px rgba(255, 238, 140, 0.7), 0 0 40px rgba(255, 238, 140, 0.7), 0 0 50px rgba(255, 238, 140, 0.7);
-}
 
 .my-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 2vw;
+  background-color: transparent;
+  color: hsl(317 100% 54%);
+  border: hsl(317 100% 54%) 4px solid;
+  padding: 10px 1vw;
+  font-size: 1.5vw;
   cursor: pointer;
-  border-radius: 3vw;
+  text-decoration: none;
   transition: box-shadow 0.5s;
+  border-radius: 0.25vw;
+  box-shadow: inset 0 0 0.5em 0 hsl(317 100% 54%), 0 0 0.5em 0 hsl(317 100% 54%);
+  text-shadow: 0 0 0.125em, 0 0 0.25em currentColor;
+  position: relative;
+  font-family: 'Roboto Condensed', sans-serif;
+}
+
+.my-button.b1::before {
+  content: '';
+  position: absolute;
+  background-color: hsl(317 100% 54%);
+  top: 120%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  transform: perspective(1em) rotateX(40deg) scale(1, 0.35);
+  filter: blur(1.2em);
+}
+.my-button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  box-shadow: 0 0 2em 0.5em hsl(317 100% 54%);
+  opacity: 0;
+  transition: opacity 0.2s linear;
+}
+
+.my-button:hover::after {
+  opacity: 1;
 }
 
 .my-button:hover {
-  background-color: #0056b3;
+  background: hsl(317 100% 54%);
+  color: black;
+  text-shadow: none;
+
 }
 .text {
   font-size: 6vw;
@@ -178,7 +211,8 @@ body {
 .timer {
   font-family: 'Roboto Condensed', sans-serif;
   font-size: 7vw;
-  margin-top: -65vh;
-  color: gray;
+  margin-top: -68vh;
+  color: #444444;
+  font-weight: bold;
   position: absolute;
 }
