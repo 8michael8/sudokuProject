@@ -1,1 +1,1 @@
-web: cd flask-server && python server.py
+web: cd client && npm start
