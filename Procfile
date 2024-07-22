@@ -1,1 +1,1 @@
-web: gunicorn flask-server.serverp:app
+web: cd client && npm start
