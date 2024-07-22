@@ -1,1 +1,1 @@
-web: cd flask-server && source venv/Scripts/activate && python server.py
+web: cd flask-server && gunicorn server:app
