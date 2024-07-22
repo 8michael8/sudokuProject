@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+import os
 
 app = Flask(__name__)
 
@@ -8,7 +9,6 @@ def findEmpty(board):
             if board[i][j] == 0:
                 return i, j
     return False
-
 
 def checkValidNum(board, position, number):
     for i in range(len(board[0])):
@@ -28,7 +28,6 @@ def checkValidNum(board, position, number):
                 return False
 
     return True
-
 
 def solveSudoku(board, steps):
     if not findEmpty(board):
@@ -67,6 +66,5 @@ def solve():
                     errorList.append((i, j))
         return jsonify({"steps": steps, "errorList": errorList})
 
-
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
