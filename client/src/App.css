@@ -127,6 +127,18 @@ body {
   transition: opacity 0.2s linear;
 }
 
+.my-button.b2::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  box-shadow: 0 0 2em 0.5em orange;
+  opacity: 0;
+  transition: opacity 0.2s linear;
+}
+
 .my-button:hover::after {
   opacity: 1;
 }
