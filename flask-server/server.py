@@ -1,14 +1,14 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify
 
-app = Flask(__name__, static_folder="../client/build")
+app = Flask(__name__)
 
-# Sudoku solver functions
 def findEmpty(board):
     for i in range(len(board)):
         for j in range(len(board[0])):
             if board[i][j] == 0:
                 return i, j
     return False
+
 
 def checkValidNum(board, position, number):
     for i in range(len(board[0])):
@@ -28,6 +28,7 @@ def checkValidNum(board, position, number):
                 return False
 
     return True
+
 
 def solveSudoku(board, steps):
     if not findEmpty(board):
@@ -66,13 +67,6 @@ def solve():
                     errorList.append((i, j))
         return jsonify({"steps": steps, "errorList": errorList})
 
-@app.route("/", defaults={"path": ""})
-@app.route("/<path:path>")
-def serve(path):
-    if path != "" and os.path.exists(app.static_folder + "/" + path):
-        return send_from_directory(app.static_folder, path)
-    else:
-        return send_from_directory(app.static_folder, 'index.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
