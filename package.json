@@ -2,7 +2,11 @@
   "name": "sudokuproject",
   "version": "1.0.0",
   "main": "index.js",
-  "dependencies": {
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cd flask-server && python server.py"
+  },
+    "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -11,19 +15,6 @@
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "cd client && react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "postinstall": "npm run build",
-    "heroku-postbuild": "cd client && npm install && npm run build"
-  },
-  "engines": {
-    "node": "16.x",
-    "npm": "8.x"
-  },
-
   "keywords": [],
   "author": "",
   "license": "ISC",
