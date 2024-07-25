@@ -103,32 +103,26 @@ const timerRef = useRef(null);
     };
 
     const handleSubmit = async () => {
-        setLoading(true);
-        pauseTimer();
-        try {
-            const response = await fetch(`${config.API_BASE_URL}/solve`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ currentBoard: currentBoardRef.current, board })
-            });
-            const data = await response.json();
-            if (data.steps) {
-                setSteps(data.steps);
-                setCurrentStep(0);
-            }
-            if (data.errorList) {
-                setErrors(data.errorList);
-            } else {
-                alert('Board cannot be solved');
-            }
-        } catch (error) {
-            console.error("Error fetching data:", error);
-            alert("Failed to fetch data from the server.");
-        } finally {
-            setLoading(false);
-        }
+      setLoading(true);
+      pauseTimer();
+      const response = await fetch(`${config.API_BASE_URL}/solve`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ currentBoard: currentBoardRef.current, board })
+      });
+      const data = await response.json();
+      if (data.steps) {
+        setSteps(data.steps);
+        setCurrentStep(0);
+      }
+      if(data.errorList){
+        setErrors(data.errorList)
+      }
+      else {
+        alert('Board cannot be solved');
+      }
     };
 
         const startTimer = () => {

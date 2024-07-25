@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import os
 
-app = Flask(__name__, static_folder="../client/build", static_url_path="/")
+app = Flask(__name__, static_folder="client/build", static_url_path="/")
 CORS(app)
 
 def findEmpty(board):
@@ -66,7 +66,7 @@ def solve():
             for j in range(len(boardError[0])):
                 if (boardError[i][j] != board[i][j] or boardError[i][j] == 0):
                     errorList.append((i, j))
-        return jsonify({"steps": steps, "e.\venv    rrorList": errorList})
+        return jsonify({"steps": steps, "errorList": errorList})
     else:
         return jsonify({"error": "Board cannot be solved"}), 400
 
@@ -79,4 +79,5 @@ def serve(path):
         return send_from_directory(app.static_folder, "index.html")
 
 if __name__ == "__main__":
-    app.run()
+    port = int(os.environ.get('PORT', 5000))
+    app.run(port=port)
