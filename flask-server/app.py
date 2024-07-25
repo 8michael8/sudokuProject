@@ -1,5 +1,8 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
+
 app = Flask(__name__)
+CORS(app)
 
 def findEmpty(board):
     for i in range(len(board)):
@@ -63,6 +66,8 @@ def solve():
                 if (boardError[i][j] != board[i][j] or boardError[i][j] == 0):
                     errorList.append((i, j))
         return jsonify({"steps": steps, "errorList": errorList})
+    else:
+        return jsonify({"error": "Board cannot be solved"}), 400
 
 if __name__ == "__main__":
     app.run()
