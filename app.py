@@ -66,7 +66,7 @@ def solve():
             for j in range(len(boardError[0])):
                 if (boardError[i][j] != board[i][j] or boardError[i][j] == 0):
                     errorList.append((i, j))
-        return jsonify({"steps": steps, "errorList": errorList})
+        return jsonify({"steps": steps, "e.\venv    rrorList": errorList})
     else:
         return jsonify({"error": "Board cannot be solved"}), 400
 
