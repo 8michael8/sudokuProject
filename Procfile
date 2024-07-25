@@ -1,1 +1,1 @@
-web: gunicorn flask-server.app:app
+web: waitress-serve --port=$PORT flask-server.app:app
