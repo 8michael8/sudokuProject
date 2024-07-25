@@ -1,1 +1,1 @@
-web: waitress-serve --port=$PORT app:app
+web: cd client && npm start
