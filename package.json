@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "gunicorn flask-server.app:app",
+    "start": "waitress-serve --port=$PORT flask-server.app:app",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "dependencies": {
