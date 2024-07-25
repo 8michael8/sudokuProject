@@ -2,5 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/flask-server/sudoku-solver-michael" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/sudoku-solver-michael" vcs="Git" />
   </component>
 </project>
