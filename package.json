@@ -4,8 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "waitress-serve --port=$PORT flask-server.app:app",
-    "heroku-postbuild": "cd client && npm install && npm run build && npm start"
+    "start": "waitress-serve --port=$PORT app:app",
+    "heroku-postbuild": "waitress-serve --port=$PORT app:app"
   },
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
