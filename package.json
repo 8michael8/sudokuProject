@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "cd flask-server && python server.py",
+    "start": "gunicorn flask-server.app:app",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "dependencies": {
