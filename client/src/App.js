@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
+import useWebFontLoader from './useWebFontLoader';
 import './App.css';
 import config from './config';
-import buttonImage from './images/button.png';
-import background from './images/black.jpg';
 
 /* To start react: npm start*/
 
 function App() {
+    useWebFontLoader();
     const boards = [
         [
             [7, 8, 0, 4, 0, 0, 1, 2, 0],
